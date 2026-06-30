@@ -9,6 +9,52 @@
 <body>
 
 <!-- ════════════════════════════════════
+     LOADING SCREEN
+════════════════════════════════════ -->
+<div id="loading-screen" class="loading-screen">
+  <div class="loading-spinner"></div>
+  <p>A carregar...</p>
+</div>
+
+<!-- ════════════════════════════════════
+     AUTH SCREEN (login / registo)
+════════════════════════════════════ -->
+<div id="auth-screen" class="auth-screen" style="display:none">
+  <img src="img/botanical-branch.svg" class="hero-branch left" alt="" style="position:fixed">
+  <img src="img/botanical-branch.svg" class="hero-branch right" alt="" style="position:fixed">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="logo-icon">🌿</span>
+      Luana <span>Estética</span>
+    </div>
+    <h2 id="auth-mode-title" data-mode="login">Entrar</h2>
+    <p class="auth-subtitle">Acede à tua plataforma de gestão de clientes</p>
+
+    <div class="auth-error" id="auth-error" style="display:none"></div>
+
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" id="auth-email" placeholder="email@exemplo.com" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <button class="btn btn-moss btn-lg auth-submit" id="auth-submit-btn" onclick="doLogin()">Entrar</button>
+
+    <p class="auth-toggle" id="auth-toggle-text">
+      Ainda não tens conta? <a href="#" onclick="toggleAuthMode();return false;">Criar conta</a>
+    </p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     APP SCREEN (everything else)
+════════════════════════════════════ -->
+<div id="app-screen" style="display:none">
+
+<!-- ════════════════════════════════════
      HEADER
 ════════════════════════════════════ -->
 <header>
@@ -19,6 +65,9 @@
   <nav>
     <button class="nav-btn active" data-view="search" onclick="showView('search')">Clientes</button>
     <button class="nav-btn accent" onclick="newFicha()">+ Nova Ficha</button>
+    <button class="nav-btn logout-btn" onclick="doLogout()" title="Terminar sessão">
+      <span id="user-email-label"></span> · Sair
+    </button>
   </nav>
 </header>
 
@@ -770,11 +819,20 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+</div><!-- /app-screen -->
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
 <!-- Scripts — ordem importante! -->
+<script src="js/firebase-config.js"></script>
 <script src="js/db.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/ficha.js"></script>
 <script src="js/tratamento.js"></script>
+<script src="js/auth.js"></script>
 
 </body>
 </html>

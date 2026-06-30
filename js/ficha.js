@@ -309,6 +309,7 @@ function excluirFicha() {
   const c = db.find(x => x.id === currentEditId);
   if (!c) return;
   if (!confirm(`Excluir a ficha de "${c.nome}"? Esta ação não pode ser desfeita.`)) return;
+  _deleteFromFirestore(currentEditId);
   saveDB(db.filter(x => x.id !== currentEditId));
   toast('🗑️ Ficha excluída.');
   setTimeout(() => showView('search'), 500);

@@ -1,14 +1,63 @@
 // ════════════════════════════════════════
-//  DATABASE
+//  DATABASE — Firestore-backed, synced in-memory cache
 // ════════════════════════════════════════
-const DB_KEY = 'luana_estetica_v3';
+// loadDB()/saveDB() keep the same synchronous signature the rest of the
+// app already uses. Behind the scenes, a local cache mirrors Firestore
+// and every save is pushed up to the cloud, scoped to the logged-in user.
+
+let _dbCache = [];
+let _dbReady = false;
+let _dbReadyCallbacks = [];
+
+function _fichasCollection() {
+  return fsdb.collection('users').doc(currentUser.uid).collection('fichas');
+}
 
 function loadDB() {
-  try { return JSON.parse(localStorage.getItem(DB_KEY)) || []; }
-  catch { return []; }
+  return _dbCache;
 }
+
 function saveDB(data) {
-  localStorage.setItem(DB_KEY, JSON.stringify(data));
+  _dbCache = data;
+  _syncToFirestore(data);
+}
+
+// Push the whole array to Firestore (one document per ficha, keyed by id)
+let _syncTimer = null;
+function _syncToFirestore(data) {
+  if (!currentUser) return;
+  clearTimeout(_syncTimer);
+  _syncTimer = setTimeout(() => {
+    const batch = fsdb.batch();
+    const col = _fichasCollection();
+    data.forEach(ficha => {
+      batch.set(col.doc(ficha.id), ficha);
+    });
+    batch.commit().catch(err => {
+      console.error('Erro ao guardar na nuvem:', err);
+      toast('⚠️ Erro ao sincronizar. Verifica a tua ligação.', 'danger');
+    });
+  }, 250);
+}
+
+function _deleteFromFirestore(id) {
+  if (!currentUser) return;
+  _fichasCollection().doc(id).delete().catch(err => console.error('Erro ao excluir na nuvem:', err));
+}
+
+// Called once after login — loads all fichas from Firestore into the cache
+function initApp() {
+  _dbReady = false;
+  _fichasCollection().get().then(snapshot => {
+    _dbCache = snapshot.docs.map(d => d.data());
+    _dbReady = true;
+    _dbReadyCallbacks.forEach(cb => cb());
+    _dbReadyCallbacks = [];
+    renderCards();
+  }).catch(err => {
+    console.error('Erro ao carregar dados:', err);
+    toast('⚠️ Erro ao carregar dados da nuvem.', 'danger');
+  });
 }
 
 // ════════════════════════════════════════
