@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luana Estética · Fichas de Clientes</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     HEADER
+════════════════════════════════════ -->
+<header>
+  <div class="logo">
+    <span class="logo-icon">🌿</span>
+    Luana <span>Estética</span>
+  </div>
+  <nav>
+    <button class="nav-btn active" data-view="search" onclick="showView('search')">Clientes</button>
+    <button class="nav-btn accent" onclick="newFicha()">+ Nova Ficha</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ════════════════════════════════════
+     VIEW: SEARCH / HOME
+════════════════════════════════════ -->
+<div class="view active" id="view-search">
+
+  <div class="home-hero">
+    <img src="img/botanical-branch.svg" class="hero-branch left" alt="">
+    <img src="img/botanical-branch.svg" class="hero-branch right" alt="">
+    <div class="hero-content">
+      <div class="home-hero-badge">✨ Gestão de Clientes</div>
+      <h1>Bem-vinda, <em>Luana</em></h1>
+      <p>Gerencie as fichas das suas clientes, acompanhe tratamentos<br>e registe cada sessão com cuidado e precisão.</p>
+
+      <div class="search-wrap">
+        <input type="text" id="search-input" placeholder="Pesquisar cliente pelo nome..." oninput="renderCards()">
+      </div>
+
+      <div class="quick-actions">
+        <button class="btn btn-rosy btn-lg" onclick="newFicha()">+ Nova Ficha de Cliente</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-pill">
+      <span class="stat-dot"></span>
+      <span class="stat-num" id="stat-total">0</span>
+      clientes cadastradas
+    </div>
+  </div>
+
+  <div class="section-heading">
+    <h2>Clientes</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="clients-grid" id="clients-grid"></div>
+
+  <div class="home-footer">
+    <span class="home-footer-line"></span>
+    <span>Luana Estética · Cuidado, beleza e bem-estar</span>
+    <span class="home-footer-line"></span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     VIEW: FORM (nova ficha / editar)
+════════════════════════════════════ -->
+<div class="view" id="view-form">
+
+  <div class="form-topbar">
+    <button class="btn btn-outline btn-sm" onclick="showView('search')">← Voltar</button>
+    <h2 id="form-title">Nova Ficha de Cliente</h2>
+  </div>
+
+  <!-- ── 1 · IDENTIFICAÇÃO ── -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="card-icon">👤</div>
+      <h3>Identificação</h3>
+    </div>
+    <div class="form-grid">
+      <div class="field span-2">
+        <label>Nome completo *</label>
+        <input type="text" id="f-nome" placeholder="Nome da cliente">
+      </div>
+      <div class="field">
+        <label>Data de nascimento</label>
+        <input type="date" id="f-nascimento">
+      </div>
+      <div class="field">
+        <label>Sexo</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="sexo" value="F">Feminino</label>
+          <label class="radio-pill"><input type="radio" name="sexo" value="M">Masculino</label>
+          <label class="radio-pill"><input type="radio" name="sexo" value="outro">Outro</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Telefone / WhatsApp</label>
+        <input type="tel" id="f-telefone" placeholder="+351 912 345 678">
+      </div>
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="f-email" placeholder="email@exemplo.com">
+      </div>
+      <div class="field">
+        <label>Profissão</label>
+        <input type="text" id="f-profissao" placeholder="Ex: Professora">
+      </div>
+      <div class="field">
+        <label>Como nos conheceu?</label>
+        <select id="f-indicacao">
+          <option value="">Selecione</option>
+          <option>Instagram</option>
+          <option>Indicação de amiga/o</option>
+          <option>Google / Internet</option>
+          <option>Facebook</option>
+          <option>Panfleto / cartão</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="field span-2">
+        <label>Endereço</label>
+        <input type="text" id="f-endereco" placeholder="Rua, número, cidade">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2 · SERVIÇOS ── -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="card-icon">✨</div>
+      <h3>Serviços de Interesse</h3>
+    </div>
+    <div class="check-group">
+      <label class="check-item"><input type="checkbox" id="sv-unhas-gel"><span>Unhas em Gel</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-unhas-acr"><span>Unhas em Acrílico</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-unhas-fibra"><span>Fibra de Vidro</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-nail-art"><span>Nail Art / Decoração</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-manicure"><span>Manicure & Pedicure</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-facial-limpeza"><span>Limpeza de Pele</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-facial-peeling"><span>Peeling</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-facial-hidrat"><span>Hidratação Facial</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-facial-anti"><span>Anti-aging / Lifting</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-facial-micro"><span>Microagulhamento</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-massagem-relax"><span>Massagem Relaxante</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-massagem-modal"><span>Massagem Modeladora</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-massagem-pedras"><span>Pedras Quentes</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-massagem-bambu"><span>Bambuterapia</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-corporal-drenagem"><span>Drenagem Linfática</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-corporal-ultra"><span>Ultrassom</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-corporal-radio"><span>Radiofrequência</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-corporal-vac"><span>Vacuoterapia</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-corporal-eletro"><span>Eletroestimulação</span></label>
+      <label class="check-item"><input type="checkbox" id="sv-depilacao"><span>Depilação</span></label>
+    </div>
+  </div>
+
+  <!-- ── 3 · DADOS CLÍNICOS ── -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="card-icon">🩺</div>
+      <h3>Dados Clínicos</h3>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Medicação</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="medicacao" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="medicacao" value="nao">Não</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Para que efeito / qual medicamento</label>
+        <input type="text" id="f-med-efeito" placeholder="Ex: Roacutan, anticoagulante...">
+      </div>
+      <div class="field">
+        <label>Alergias</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="alergias" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="alergias" value="nao">Não</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Quais alergias</label>
+        <input type="text" id="f-alergias" placeholder="Ex: látex, níquel, fragrâncias">
+      </div>
+      <div class="field">
+        <label>Intervenção cirúrgica</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="cirurgia" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="cirurgia" value="nao">Não</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Qual / há quanto tempo</label>
+        <input type="text" id="f-cirurgia-det" placeholder="Ex: rinoplastia há 6 meses">
+      </div>
+      <div class="field">
+        <label>Próteses metálicas</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="protese" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="protese" value="nao">Não</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Onde / há quanto tempo</label>
+        <input type="text" id="f-protese-det" placeholder="Ex: joelho, há 2 anos">
+      </div>
+      <div class="field">
+        <label>Antecedentes oncológicos</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="oncologico" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="oncologico" value="nao">Não</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Quais / há quanto tempo</label>
+        <input type="text" id="f-oncologico-det">
+      </div>
+      <div class="field">
+        <label>Gestação / Gravidez</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="gestacao" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="gestacao" value="nao">Não</label>
+          <label class="radio-pill"><input type="radio" name="gestacao" value="amamentando">Amamentando</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Há quanto tempo / trimestre</label>
+        <input type="text" id="f-gestacao-det" placeholder="Ex: 2º trimestre">
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-label">Doenças</div>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" id="pat-diabetes"><span>Diabetes</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-epilepsia"><span>Epilepsia</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-tiroide"><span>Tiroide</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-hipertiroi"><span>Hipertiroidismo</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-hipotiroi"><span>Hipotiroidismo</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-psoriase"><span>Psoríase</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-hepatite"><span>Hepatite</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-hiv"><span>HIV</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-asma"><span>Asma</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-esclerose"><span>Esclerose múltipla</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-tuberculose"><span>Tuberculose</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-varizes"><span>Varizes</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-cancro"><span>Cancro</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-cardiacos"><span>Prob. Cardíacos</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-osseos"><span>Prob. Ósseos</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-herpes"><span>Herpes</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-eczema"><span>Eczema</span></label>
+        <label class="check-item"><input type="checkbox" id="pat-autoimune"><span>Autoimune</span></label>
+      </div>
+      <div class="field" style="margin-top:0.8rem">
+        <label>Outras doenças</label>
+        <input type="text" id="f-outras-doencas" placeholder="Outras condições não listadas">
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-label">Hábitos & Estilo de Vida</div>
+      <div class="form-grid" style="margin-top:0.5rem">
+        <div class="field">
+          <label>Lentes de contacto</label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="lentes" value="sim">Sim</label>
+            <label class="radio-pill"><input type="radio" name="lentes" value="nao">Não</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Alimentação equilibrada</label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="alimentacao" value="sim">Sim</label>
+            <label class="radio-pill"><input type="radio" name="alimentacao" value="nao">Não</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Fumadora</label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="fuma" value="sim">Sim</label>
+            <label class="radio-pill"><input type="radio" name="fuma" value="nao">Não</label>
+            <label class="radio-pill"><input type="radio" name="fuma" value="ex">Ex-fumante</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Desporto / Atividade física</label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="desporto" value="sim">Sim</label>
+            <label class="radio-pill"><input type="radio" name="desporto" value="nao">Não</label>
+            <label class="radio-pill"><input type="radio" name="desporto" value="ocasional">Ocasional</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Água por dia</label>
+          <select id="f-agua">
+            <option value="">Selecione</option>
+            <option>Menos de 4 copos</option>
+            <option>4–6 copos</option>
+            <option>6–8 copos</option>
+            <option>Mais de 8 copos</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tratamento com AHAs ou Acutane</label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="aha" value="sim">Sim</label>
+            <label class="radio-pill"><input type="radio" name="aha" value="nao">Não</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Há quanto tempo (AHAs)</label>
+          <input type="text" id="f-aha-det" placeholder="Ex: 3 meses">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4 · PELE FACIAL ── -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="card-icon">🧖</div>
+      <h3>Avaliação da Pele — Facial</h3>
+    </div>
+
+    <div class="section-note">
+      💡 <strong>Tipo de pele</strong> é determinado pela genética e mais permanente.
+      <strong>Estado da pele</strong> pode mudar com o tempo por clima, hormónios, stress ou medicamentos.
+      Uma cliente pode ter pele oleosa (tipo) e estar desidratada (estado) ao mesmo tempo.
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-label">🌸 Tipo de Pele — pode selecionar mais de um</div>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" id="tipo-normal"><span>Normal (equilibrada)</span></label>
+        <label class="check-item"><input type="checkbox" id="tipo-seca"><span>Seca / Alipídica</span></label>
+        <label class="check-item"><input type="checkbox" id="tipo-oleosa"><span>Oleosa / Lipídica</span></label>
+        <label class="check-item"><input type="checkbox" id="tipo-mista"><span>Mista (zona T oleosa)</span></label>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-label">🌿 Estado da Pele — pode selecionar mais de um</div>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" id="est-desidratada"><span>Desidratada (falta água)</span></label>
+        <label class="check-item"><input type="checkbox" id="est-sensivel"><span>Sensível</span></label>
+        <label class="check-item"><input type="checkbox" id="est-acneica"><span>Acneica</span></label>
+        <label class="check-item"><input type="checkbox" id="est-asfixiada"><span>Asfixiada</span></label>
+        <label class="check-item"><input type="checkbox" id="est-envelhecida"><span>Envelhecida / Fotoenvelhecida</span></label>
+        <label class="check-item"><input type="checkbox" id="est-desvitalizada"><span>Desvitalizada (sem brilho)</span></label>
+        <label class="check-item"><input type="checkbox" id="est-hiperpig"><span>Hiperpigmentada (manchas)</span></label>
+        <label class="check-item"><input type="checkbox" id="est-rosácea"><span>Com Rosácea</span></label>
+        <label class="check-item"><input type="checkbox" id="est-flacidez"><span>Com Flacidez</span></label>
+        <label class="check-item"><input type="checkbox" id="est-descam"><span>Com Descamação</span></label>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-label">🔍 Presença de Lesões e Alterações</div>
+      <div class="check-group">
+        <label class="check-item"><input type="checkbox" id="les-hipocromia"><span>Hipocromia</span></label>
+        <label class="check-item"><input type="checkbox" id="les-hipercromia"><span>Hipercromia</span></label>
+        <label class="check-item"><input type="checkbox" id="les-melasma"><span>Melasma</span></label>
+        <label class="check-item"><input type="checkbox" id="les-efélides"><span>Efélides (sardas)</span></label>
+        <label class="check-item"><input type="checkbox" id="les-comedoes"><span>Comedões (cravos)</span></label>
+        <label class="check-item"><input type="checkbox" id="les-papulas"><span>Pápulas</span></label>
+        <label class="check-item"><input type="checkbox" id="les-pustulas"><span>Pústulas</span></label>
+        <label class="check-item"><input type="checkbox" id="les-cicatriz"><span>Cicatrizes</span></label>
+        <label class="check-item"><input type="checkbox" id="les-telangiect"><span>Telangectasias</span></label>
+        <label class="check-item"><input type="checkbox" id="les-verrugas"><span>Verrugas</span></label>
+        <label class="check-item"><input type="checkbox" id="les-ceratose"><span>Ceratose</span></label>
+        <label class="check-item"><input type="checkbox" id="les-milium"><span>Milium</span></label>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <div class="sub-section-label">Classificação Detalhada</div>
+      <div class="form-grid" style="margin-top:0.5rem">
+        <div class="field">
+          <label>Hidratação</label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="hidrat" value="desidratada">Desidratada</label>
+            <label class="radio-pill"><input type="radio" name="hidrat" value="hidratada">Hidratada</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Espessura</label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="espessura" value="espessa">Espessa</label>
+            <label class="radio-pill"><input type="radio" name="espessura" value="media">Média</label>
+            <label class="radio-pill"><input type="radio" name="espessura" value="fina">Fina</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Sensibilidade</label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="sensib" value="rosto">Rosto todo</label>
+            <label class="radio-pill"><input type="radio" name="sensib" value="macas">Maçãs do rosto</label>
+            <label class="radio-pill"><input type="radio" name="sensib" value="outro">Outra área</label>
+            <label class="radio-pill"><input type="radio" name="sensib" value="nao">Não</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Tom de pele (Fitzpatrick)</label>
+          <select id="f-fitzpatrick">
+            <option value="">Selecione</option>
+            <option>I – Muito claro (sempre queima)</option>
+            <option>II – Claro (quase sempre queima)</option>
+            <option>III – Médio (às vezes queima)</option>
+            <option>IV – Azeitonado (raramente queima)</option>
+            <option>V – Moreno escuro</option>
+            <option>VI – Negro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Filtro solar diário?</label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="filtro" value="sim">Sim</label>
+            <label class="radio-pill"><input type="radio" name="filtro" value="nao">Não</label>
+            <label class="radio-pill"><input type="radio" name="filtro" value="as-vezes">Às vezes</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Ácidos / retinol em casa?</label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="acidos" value="sim">Sim</label>
+            <label class="radio-pill"><input type="radio" name="acidos" value="nao">Não</label>
+          </div>
+        </div>
+        <div class="field span-2">
+          <label>Cuidados diários / produtos em uso</label>
+          <textarea id="f-produtos-pele" placeholder="Limpador, hidratante, sérum, etc."></textarea>
+        </div>
+        <div class="field span-2">
+          <label>Procedimento estético recente</label>
+          <input type="text" id="f-proc-recente" placeholder="Ex: peeling químico há 3 meses">
+        </div>
+        <div class="field span-2">
+          <label>Aconselhamentos à cliente</label>
+          <textarea id="f-aconselh-facial" placeholder="Recomendações dadas à cliente..."></textarea>
+        </div>
+        <div class="field span-2">
+          <label>Cosméticos utilizados em tratamento</label>
+          <textarea id="f-cosm-facial" placeholder="Produtos usados durante o tratamento..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 5 · UNHAS ── -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="card-icon">💅</div>
+      <h3>Manicura & Pedicura</h3>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Tipo de unhas</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="tipo-unhas" value="normais">Normais</label>
+          <label class="radio-pill"><input type="radio" name="tipo-unhas" value="frageis">Frágeis</label>
+          <label class="radio-pill"><input type="radio" name="tipo-unhas" value="descamam">Descamam</label>
+          <label class="radio-pill"><input type="radio" name="tipo-unhas" value="quebradichas">Quebradiças</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Estado da pele das mãos/pés</label>
+        <input type="text" id="f-pele-maos" placeholder="Ex: ressecada, com calosidades...">
+      </div>
+      <div class="field">
+        <label>Tipo de pé (pedicura)</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="tipo-pe" value="normal">Pé normal</label>
+          <label class="radio-pill"><input type="radio" name="tipo-pe" value="plano">Pé plano</label>
+          <label class="radio-pill"><input type="radio" name="tipo-pe" value="cavo">Pé cavo</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Histórico de onicomicose?</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="fungo-unhas" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="fungo-unhas" value="nao">Não</label>
+          <label class="radio-pill"><input type="radio" name="fungo-unhas" value="trat">Em tratamento</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Rói as unhas?</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="roer" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="roer" value="nao">Não</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Alergia a gel / acrílico?</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="alergia-gel" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="alergia-gel" value="nao">Não</label>
+          <label class="radio-pill"><input type="radio" name="alergia-gel" value="nao-sei">Não sei</label>
+        </div>
+      </div>
+      <div class="field span-2">
+        <label>Maquilhagem habitual</label>
+        <input type="text" id="f-maquilhagem" placeholder="Ex: natural, intensa, sem maquilhagem">
+      </div>
+      <div class="field span-2">
+        <label>Aconselhamentos à cliente</label>
+        <textarea id="f-aconselh-unhas" placeholder="Recomendações dadas..."></textarea>
+      </div>
+      <div class="field span-2">
+        <label>Cosméticos utilizados em tratamento</label>
+        <textarea id="f-cosm-unhas" placeholder="Produtos usados na manicura/pedicura..."></textarea>
+      </div>
+      <div class="field span-2">
+        <label>Observações</label>
+        <textarea id="f-obs-unhas" placeholder="Outras notas..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6 · CORPORAL ── -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="card-icon">🧴</div>
+      <h3>Corporal & Massagem</h3>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Objetivo principal</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="obj-corp" value="relaxamento">Relaxamento</label>
+          <label class="radio-pill"><input type="radio" name="obj-corp" value="emagrecimento">Emagrecimento</label>
+          <label class="radio-pill"><input type="radio" name="obj-corp" value="modelagem">Modelagem</label>
+          <label class="radio-pill"><input type="radio" name="obj-corp" value="drenagem">Drenagem</label>
+          <label class="radio-pill"><input type="radio" name="obj-corp" value="dor">Alívio de dores</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Marcapasso ou implante?</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="marcapasso" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="marcapasso" value="nao">Não</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Hérnia de disco?</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="hernia" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="hernia" value="nao">Não</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Sensibilidade ao calor?</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="calor" value="sim">Sim</label>
+          <label class="radio-pill"><input type="radio" name="calor" value="nao">Não</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Pressão preferida em massagem</label>
+        <div class="radio-group">
+          <label class="radio-pill"><input type="radio" name="pressao" value="leve">Leve</label>
+          <label class="radio-pill"><input type="radio" name="pressao" value="media">Média</label>
+          <label class="radio-pill"><input type="radio" name="pressao" value="forte">Forte</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Área de maior tensão</label>
+        <input type="text" id="f-tensao" placeholder="Ex: lombar, pescoço, pernas">
+      </div>
+      <div class="field span-2">
+        <label>Observações corporais</label>
+        <textarea id="f-obs-corp" placeholder="Cirurgias recentes, limitações, edemas..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 7 · AVALIAÇÃO FINAL ── -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="card-icon">📝</div>
+      <h3>Avaliação Final & Notas</h3>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Data da primeira visita</label>
+        <input type="date" id="f-data-visita">
+      </div>
+      <div class="field">
+        <label>Avaliação da cliente</label>
+        <div class="rating-row">
+          <button type="button" class="star-btn" data-v="1" onclick="setStar(1)">⭐</button>
+          <button type="button" class="star-btn" data-v="2" onclick="setStar(2)">⭐</button>
+          <button type="button" class="star-btn" data-v="3" onclick="setStar(3)">⭐</button>
+          <button type="button" class="star-btn" data-v="4" onclick="setStar(4)">⭐</button>
+          <button type="button" class="star-btn" data-v="5" onclick="setStar(5)">⭐</button>
+          <span id="star-label"></span>
+        </div>
+        <input type="hidden" id="f-avaliacao" value="0">
+      </div>
+      <div class="field span-2">
+        <label>Expectativas / O que a cliente deseja alcançar</label>
+        <textarea id="f-expectativas" placeholder="Metas e objetivos da cliente..."></textarea>
+      </div>
+      <div class="field span-2">
+        <label>Observações internas</label>
+        <textarea id="f-obs-geral" placeholder="Notas privadas, perfil da cliente, lembretes..."></textarea>
+      </div>
+      <div class="field span-2">
+        <label style="text-transform:none;letter-spacing:0;font-size:0.86rem;font-weight:400;display:flex;align-items:flex-start;gap:0.5rem;cursor:pointer">
+          <input type="checkbox" id="f-lgpd" style="width:15px;height:15px;flex-shrink:0;margin-top:2px;accent-color:var(--moss)">
+          A cliente autoriza o armazenamento dos seus dados para fins de atendimento estético, em conformidade com o RGPD (Regulamento Geral sobre a Proteção de Dados).
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-outline" onclick="showView('search')">Cancelar</button>
+    <button class="btn btn-moss" onclick="salvarFicha()">💾 Guardar Ficha</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     VIEW: DETAIL
+════════════════════════════════════ -->
+<div class="view" id="view-detail">
+
+  <div class="detail-banner">
+    <div class="detail-banner-top">
+      <div class="detail-avatar" id="d-avatar"></div>
+      <div class="detail-info">
+        <h2 id="d-nome"></h2>
+        <div class="d-meta" id="d-meta"></div>
+        <div class="d-services tags-row" id="d-services" style="margin-top:0.6rem"></div>
+      </div>
+    </div>
+    <div class="detail-actions">
+      <button class="btn btn-ghost btn-sm" onclick="showView('search')">← Voltar</button>
+      <button class="btn btn-ghost btn-sm" onclick="editarFicha()">✏️ Editar Ficha</button>
+      <button class="btn btn-danger btn-sm" onclick="excluirFicha()">🗑️ Excluir</button>
+    </div>
+  </div>
+
+  <div class="detail-tabs">
+    <button class="detail-tab active" onclick="switchTab('ficha')">📋 Ficha & Anamnese</button>
+    <button class="detail-tab" onclick="switchTab('tratamento')">🌿 Acompanhamento</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-ficha">
+    <div id="detail-body"></div>
+  </div>
+
+  <div class="tab-panel" id="tab-tratamento">
+    <div class="trat-header">
+      <h3>Planos de Tratamento</h3>
+      <button class="btn btn-moss btn-sm" onclick="abrirModalPlano()">+ Novo Plano</button>
+    </div>
+    <div id="planos-list"></div>
+  </div>
+</div>
+
+</main>
+
+<!-- ════════════════════════════════════
+     MODAL: NOVO PLANO
+════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-plano">
+  <div class="modal">
+    <h3 id="modal-plano-title">Novo Plano de Tratamento</h3>
+    <div class="field"><label>Nome do tratamento *</label>
+      <input type="text" id="mp-nome" placeholder="Ex: Protocolo Acne, Drenagem 10 sessões...">
+    </div>
+    <div class="form-grid">
+      <div class="field"><label>Área / Tipo</label>
+        <select id="mp-tipo">
+          <option value="">Selecione</option>
+          <option>Facial</option><option>Corporal</option>
+          <option>Unhas</option><option>Massagem</option><option>Misto</option>
+        </select>
+      </div>
+      <div class="field"><label>Total de sessões previstas</label>
+        <input type="number" id="mp-total" min="1" max="99" placeholder="Ex: 10">
+      </div>
+      <div class="field"><label>Intervalo entre sessões</label>
+        <select id="mp-intervalo">
+          <option value="">Selecione</option>
+          <option>A cada 7 dias</option><option>A cada 15 dias</option>
+          <option>A cada 21 dias</option><option>A cada 30 dias</option><option>Livre</option>
+        </select>
+      </div>
+      <div class="field"><label>Data de início</label>
+        <input type="date" id="mp-inicio">
+      </div>
+    </div>
+    <div class="field"><label>Objetivo do tratamento</label>
+      <textarea id="mp-objetivo" rows="2" placeholder="O que se pretende alcançar..."></textarea>
+    </div>
+    <div class="field"><label>Produtos / Protocolos</label>
+      <textarea id="mp-produtos" rows="2" placeholder="Ex: Sérum vitamina C, peeling enzimático..."></textarea>
+    </div>
+    <div class="field"><label>Status</label>
+      <select id="mp-status">
+        <option value="em-andamento">Em andamento</option>
+        <option value="pausado">Pausado</option>
+        <option value="concluido">Concluído</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="fecharModal('modal-plano')">Cancelar</button>
+      <button class="btn btn-moss" onclick="salvarPlano()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     MODAL: NOVA SESSÃO
+════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-sessao">
+  <div class="modal">
+    <h3 id="modal-sessao-title">Registar Sessão</h3>
+    <input type="hidden" id="ms-plano-id">
+    <input type="hidden" id="ms-sessao-id">
+    <div class="form-grid">
+      <div class="field"><label>Nº da sessão</label>
+        <input type="number" id="ms-num" min="1" placeholder="Ex: 1">
+      </div>
+      <div class="field"><label>Data da sessão</label>
+        <input type="date" id="ms-data">
+      </div>
+    </div>
+    <div class="field"><label>O que foi feito nesta sessão</label>
+      <textarea id="ms-feito" rows="3" placeholder="Técnicas aplicadas, produtos usados, duração..."></textarea>
+    </div>
+    <div class="field">
+      <label>Estado da pele / resultado observado</label>
+      <div class="pele-opcoes">
+        <button type="button" class="pele-opt" data-v="Ótima" onclick="selecionarPele(this)">✨ Ótima</button>
+        <button type="button" class="pele-opt" data-v="Boa"   onclick="selecionarPele(this)">👍 Boa</button>
+        <button type="button" class="pele-opt" data-v="Normal" onclick="selecionarPele(this)">😐 Normal</button>
+        <button type="button" class="pele-opt" data-v="Irritada" onclick="selecionarPele(this)">🔴 Irritada</button>
+        <button type="button" class="pele-opt" data-v="Reação" onclick="selecionarPele(this)">⚠️ Reação</button>
+      </div>
+      <input type="hidden" id="ms-pele-status">
+    </div>
+    <div class="field"><label>Evolução / Observações</label>
+      <textarea id="ms-evolucao" rows="3" placeholder="Como a pele reagiu, melhoras visíveis, queixas..."></textarea>
+    </div>
+    <div class="field"><label>Próxima sessão prevista</label>
+      <input type="date" id="ms-proxima">
+    </div>
+    <div class="field"><label>Recomendações para casa (homecare)</label>
+      <input type="text" id="ms-homecare" placeholder="Ex: filtro SPF50, evitar esfoliantes por 3 dias...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="fecharModal('modal-sessao')">Cancelar</button>
+      <button class="btn btn-moss" onclick="salvarSessao()">💾 Guardar Sessão</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Scripts — ordem importante! -->
+<script src="js/db.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/ficha.js"></script>
+<script src="js/tratamento.js"></script>
+
+</body>
+</html>
