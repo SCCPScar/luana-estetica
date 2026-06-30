@@ -1,47 +1,64 @@
 <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-  <g opacity="0.9">
+  <g opacity="0.92">
     <!-- Main stem -->
     <path d="M250 480 C 245 380, 260 300, 240 220 C 225 160, 250 100, 230 30"
-          stroke="#839958" stroke-width="2.5" fill="none" opacity="0.8"/>
+          stroke="#BAD797" stroke-width="3" fill="none" opacity="0.85"/>
 
-    <!-- Leaves left -->
-    <ellipse cx="190" cy="160" rx="38" ry="16" fill="#839958" opacity="0.85"
-      transform="rotate(-35 190 160)"/>
-    <ellipse cx="175" cy="240" rx="42" ry="17" fill="#6f8649" opacity="0.85"
-      transform="rotate(-30 175 240)"/>
-    <ellipse cx="165" cy="330" rx="46" ry="19" fill="#839958" opacity="0.8"
-      transform="rotate(-25 165 330)"/>
-    <ellipse cx="180" cy="410" rx="40" ry="17" fill="#6f8649" opacity="0.75"
-      transform="rotate(-32 180 410)"/>
-
-    <!-- Leaves right -->
-    <ellipse cx="290" cy="120" rx="34" ry="14" fill="#9aab6e" opacity="0.85"
-      transform="rotate(35 290 120)"/>
-    <ellipse cx="300" cy="200" rx="40" ry="16" fill="#839958" opacity="0.85"
-      transform="rotate(30 300 200)"/>
-    <ellipse cx="295" cy="285" rx="44" ry="18" fill="#6f8649" opacity="0.8"
-      transform="rotate(28 295 285)"/>
-    <ellipse cx="285" cy="365" rx="38" ry="16" fill="#839958" opacity="0.75"
-      transform="rotate(33 285 365)"/>
-
-    <!-- Flower top -->
-    <g transform="translate(228,28)">
-      <ellipse cx="0" cy="-14" rx="9" ry="16" fill="#D3968C" opacity="0.92"/>
-      <ellipse cx="13" cy="-7" rx="9" ry="16" fill="#D3968C" opacity="0.9" transform="rotate(72 13 -7)"/>
-      <ellipse cx="13" cy="7" rx="9" ry="16" fill="#c98579" opacity="0.88" transform="rotate(144 13 7)"/>
-      <ellipse cx="-13" cy="7" rx="9" ry="16" fill="#D3968C" opacity="0.9" transform="rotate(216 -13 7)"/>
-      <ellipse cx="-13" cy="-7" rx="9" ry="16" fill="#c98579" opacity="0.88" transform="rotate(288 -13 -7)"/>
-      <circle cx="0" cy="0" r="6" fill="#F7F4D5"/>
+    <!-- Cherry pairs along the branch (left side) -->
+    <g transform="translate(190 150)">
+      <path d="M0 0 C -4 -16, -2 -28, 8 -34" stroke="#BAD797" stroke-width="2.5" fill="none"/>
+      <circle cx="-12" cy="14" r="20" fill="#670626"/>
+      <circle cx="14" cy="20" r="20" fill="#670626"/>
+      <ellipse cx="-19" cy="6" rx="5" ry="3" fill="#ffffff" opacity="0.4" transform="rotate(-30 -19 6)"/>
+      <ellipse cx="7" cy="12" rx="5" ry="3" fill="#ffffff" opacity="0.4" transform="rotate(-30 7 12)"/>
     </g>
 
-    <!-- Small accent flower -->
-    <g transform="translate(170,255)">
-      <ellipse cx="0" cy="-9" rx="6" ry="10" fill="#f0d5d1" opacity="0.85"/>
-      <ellipse cx="8" cy="-4" rx="6" ry="10" fill="#f0d5d1" opacity="0.85" transform="rotate(72 8 -4)"/>
-      <ellipse cx="8" cy="5" rx="6" ry="10" fill="#D3968C" opacity="0.8" transform="rotate(144 8 5)"/>
-      <ellipse cx="-8" cy="5" rx="6" ry="10" fill="#f0d5d1" opacity="0.85" transform="rotate(216 -8 5)"/>
-      <ellipse cx="-8" cy="-4" rx="6" ry="10" fill="#D3968C" opacity="0.8" transform="rotate(288 -8 -4)"/>
-      <circle cx="0" cy="0" r="4" fill="#F7F4D5"/>
+    <g transform="translate(170 320) scale(0.9)">
+      <path d="M0 0 C -4 -16, -2 -28, 8 -34" stroke="#BAD797" stroke-width="2.5" fill="none"/>
+      <circle cx="-12" cy="14" r="20" fill="#8c0d34"/>
+      <circle cx="14" cy="20" r="20" fill="#670626"/>
+      <ellipse cx="-19" cy="6" rx="5" ry="3" fill="#ffffff" opacity="0.4" transform="rotate(-30 -19 6)"/>
+    </g>
+
+    <!-- Cherry pairs (right side) -->
+    <g transform="translate(300 110) scale(0.95)">
+      <path d="M0 0 C 4 -16, 2 -28, -8 -34" stroke="#BAD797" stroke-width="2.5" fill="none"/>
+      <circle cx="12" cy="14" r="19" fill="#670626"/>
+      <circle cx="-14" cy="20" r="19" fill="#8c0d34"/>
+      <ellipse cx="18" cy="7" rx="5" ry="3" fill="#ffffff" opacity="0.4" transform="rotate(30 18 7)"/>
+    </g>
+
+    <g transform="translate(305 250) scale(1.05)">
+      <path d="M0 0 C 4 -16, 2 -28, -8 -34" stroke="#BAD797" stroke-width="2.5" fill="none"/>
+      <circle cx="12" cy="14" r="20" fill="#670626"/>
+      <circle cx="-14" cy="20" r="20" fill="#670626"/>
+      <ellipse cx="18" cy="7" rx="5" ry="3" fill="#ffffff" opacity="0.4" transform="rotate(30 18 7)"/>
+    </g>
+
+    <g transform="translate(290 400) scale(0.85)">
+      <path d="M0 0 C 4 -16, 2 -28, -8 -34" stroke="#BAD797" stroke-width="2.5" fill="none"/>
+      <circle cx="12" cy="14" r="19" fill="#8c0d34"/>
+      <circle cx="-14" cy="20" r="19" fill="#670626"/>
+      <ellipse cx="18" cy="7" rx="5" ry="3" fill="#ffffff" opacity="0.4" transform="rotate(30 18 7)"/>
+    </g>
+
+    <!-- Small leaves on the stem -->
+    <ellipse cx="235" cy="60" rx="14" ry="6" fill="#BAD797" opacity="0.7" transform="rotate(-30 235 60)"/>
+    <ellipse cx="248" cy="200" rx="14" ry="6" fill="#BAD797" opacity="0.7" transform="rotate(25 248 200)"/>
+    <ellipse cx="232" cy="360" rx="14" ry="6" fill="#BAD797" opacity="0.7" transform="rotate(-25 232 360)"/>
+
+    <!-- Ice cubes scattered near the base -->
+    <g transform="translate(150 440) rotate(-8)">
+      <rect width="38" height="38" rx="5" fill="#BAD797" opacity="0.5"/>
+      <rect x="6" y="6" width="26" height="26" rx="3" fill="#ffffff" opacity="0.25"/>
+    </g>
+    <g transform="translate(310 460) rotate(12)">
+      <rect width="30" height="30" rx="5" fill="#BAD797" opacity="0.45"/>
+      <rect x="5" y="5" width="20" height="20" rx="3" fill="#ffffff" opacity="0.25"/>
+    </g>
+    <g transform="translate(230 30) rotate(18)">
+      <rect width="22" height="22" rx="4" fill="#BAD797" opacity="0.4"/>
+      <rect x="4" y="4" width="14" height="14" rx="2" fill="#ffffff" opacity="0.25"/>
     </g>
   </g>
 </svg>

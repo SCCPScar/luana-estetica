@@ -162,3 +162,14 @@ function getEstadoPele(c) {
   };
   return Object.entries(M).filter(([k]) => c.estadoPele && c.estadoPele[k]).map(([, v]) => v);
 }
+
+function getMultiTags(obj, map) {
+  return Object.entries(map).filter(([k]) => obj && obj[k]).map(([, v]) => v);
+}
+
+const ESPESSURA_MAP = { 'espessura-espessa':'Espessa', 'espessura-media':'Média', 'espessura-fina':'Fina' };
+const SENSIB_MAP = { 'sensib-rosto':'Rosto todo', 'sensib-macas':'Maçãs do rosto', 'sensib-outro':'Outra área', 'sensib-nao':'Não' };
+const TIPO_UNHAS_MAP = { 'tipo-unhas-normais':'Normais', 'tipo-unhas-frageis':'Frágeis', 'tipo-unhas-descamam':'Descamam', 'tipo-unhas-quebradicas':'Quebradiças' };
+const TIPO_PE_MAP = { 'tipo-pe-normal':'Pé normal', 'tipo-pe-plano':'Pé plano', 'tipo-pe-cavo':'Pé cavo' };
+const OBJ_CORP_MAP = { 'obj-corp-relaxamento':'Relaxamento', 'obj-corp-emagrecimento':'Emagrecimento', 'obj-corp-modelagem':'Modelagem', 'obj-corp-drenagem':'Drenagem', 'obj-corp-dor':'Alívio de dores' };
+const PRESSAO_MAP = { 'pressao-leve':'Leve', 'pressao-media':'Média', 'pressao-forte':'Forte' };

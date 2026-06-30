@@ -24,9 +24,9 @@ function resetForm() {
   // reset all radio groups to "nao" where it exists, else first option
   const radioNames = [
     'sexo','medicacao','alergias','cirurgia','protese','oncologico','gestacao',
-    'lentes','alimentacao','fuma','desporto','aha','hidrat','espessura','sensib',
-    'filtro','acidos','tipo-unhas','tipo-pe','fungo-unhas','roer','alergia-gel',
-    'obj-corp','marcapasso','hernia','calor','pressao'
+    'lentes','alimentacao','fuma','desporto','aha','hidrat',
+    'filtro','acidos','fungo-unhas','roer','alergia-gel',
+    'marcapasso','hernia','calor'
   ];
   radioNames.forEach(n => {
     const naoEl = document.querySelector(`input[name="${n}"][value="nao"]`);
@@ -62,6 +62,12 @@ function salvarFicha() {
     'est-desvitalizada','est-hiperpig','est-rosácea','est-flacidez','est-descam'];
   const LESOES  = ['les-hipocromia','les-hipercromia','les-melasma','les-efélides','les-comedoes',
     'les-papulas','les-pustulas','les-cicatriz','les-telangiect','les-verrugas','les-ceratose','les-milium'];
+  const ESPESSURA = ['espessura-espessa','espessura-media','espessura-fina'];
+  const SENSIB    = ['sensib-rosto','sensib-macas','sensib-outro','sensib-nao'];
+  const TIPO_UNHAS = ['tipo-unhas-normais','tipo-unhas-frageis','tipo-unhas-descamam','tipo-unhas-quebradicas'];
+  const TIPO_PE    = ['tipo-pe-normal','tipo-pe-plano','tipo-pe-cavo'];
+  const OBJ_CORP   = ['obj-corp-relaxamento','obj-corp-emagrecimento','obj-corp-modelagem','obj-corp-drenagem','obj-corp-dor'];
+  const PRESSAO    = ['pressao-leve','pressao-media','pressao-forte'];
 
   const db = loadDB();
   const existing = currentEditId ? db.find(x => x.id === currentEditId) : null;
@@ -85,20 +91,20 @@ function salvarFicha() {
     agua: val('f-agua'), aha: getRadio('aha'), ahaDet: val('f-aha-det'),
     // pele
     tipoPele: getChecks(TIPOS), estadoPele: getChecks(ESTADOS), lesoes: getChecks(LESOES),
-    hidrat: getRadio('hidrat'), espessura: getRadio('espessura'), sensib: getRadio('sensib'),
+    hidrat: getRadio('hidrat'), espessura: getChecks(ESPESSURA), sensib: getChecks(SENSIB),
     fitzpatrick: val('f-fitzpatrick'), filtro: getRadio('filtro'), acidos: getRadio('acidos'),
     produtosPele: val('f-produtos-pele'), procRecente: val('f-proc-recente'),
     aconselhFacial: val('f-aconselh-facial'), cosmFacial: val('f-cosm-facial'),
     // unhas
-    tipoUnhas: getRadio('tipo-unhas'), peleMaos: val('f-pele-maos'),
-    tipoPe: getRadio('tipo-pe'), fungoUnhas: getRadio('fungo-unhas'),
+    tipoUnhas: getChecks(TIPO_UNHAS), peleMaos: val('f-pele-maos'),
+    tipoPe: getChecks(TIPO_PE), fungoUnhas: getRadio('fungo-unhas'),
     roerUnhas: getRadio('roer'), alergiaGel: getRadio('alergia-gel'),
     maquilhagem: val('f-maquilhagem'), aconselhUnhas: val('f-aconselh-unhas'),
     cosmUnhas: val('f-cosm-unhas'), obsUnhas: val('f-obs-unhas'),
     // corporal
-    objCorporal: getRadio('obj-corp'), marcapasso: getRadio('marcapasso'),
+    objCorporal: getChecks(OBJ_CORP), marcapasso: getRadio('marcapasso'),
     hernia: getRadio('hernia'), calorSens: getRadio('calor'),
-    pressaoMassagem: getRadio('pressao'), tensao: val('f-tensao'), obsCorporal: val('f-obs-corp'),
+    pressaoMassagem: getChecks(PRESSAO), tensao: val('f-tensao'), obsCorporal: val('f-obs-corp'),
     // avaliação
     dataVisita: val('f-data-visita'), expectativas: val('f-expectativas'),
     obsGeral: val('f-obs-geral'),
@@ -160,6 +166,12 @@ function showDetail(id) {
   const lesoes = Object.entries(LES_MAP).filter(([k]) => c.lesoes && c.lesoes[k]).map(([, v]) => v);
   const tipos  = getTipoPele(c);
   const estados = getEstadoPele(c);
+  const espessuras = getMultiTags(c.espessura, ESPESSURA_MAP);
+  const sensibs     = getMultiTags(c.sensib, SENSIB_MAP);
+  const tipoUnhasTags = getMultiTags(c.tipoUnhas, TIPO_UNHAS_MAP);
+  const tipoPeTags    = getMultiTags(c.tipoPe, TIPO_PE_MAP);
+  const objCorpTags   = getMultiTags(c.objCorporal, OBJ_CORP_MAP);
+  const pressaoTags   = getMultiTags(c.pressaoMassagem, PRESSAO_MAP);
   const stars  = c.avaliacao > 0 ? '⭐'.repeat(c.avaliacao) : '—';
 
   const row = (l, v) => v
@@ -198,23 +210,23 @@ function showDetail(id) {
       ${rowTags('Tipo de pele', tipos, 'tag-beige')}
       ${rowTags('Estado da pele', estados, 'tag-rosy')}
       ${rowTags('Lesões / Alterações', lesoes, 'tag-night')}
-      ${row('Hidratação', c.hidrat)} ${row('Espessura', c.espessura)} ${row('Sensibilidade', c.sensib)}
+      ${row('Hidratação', c.hidrat)} ${rowTags('Espessura', espessuras, 'tag-beige')} ${rowTags('Sensibilidade', sensibs, 'tag-beige')}
       ${row('Fitzpatrick', c.fitzpatrick)} ${row('Filtro solar', c.filtro)}
       ${row('Ácidos em casa', c.acidos)} ${row('Produtos em uso', c.produtosPele)}
       ${row('Proc. recente', c.procRecente)} ${row('Aconselhamentos', c.aconselhFacial)}
       ${row('Cosméticos usados', c.cosmFacial)}
     </div>
     <div class="info-block"><h4>💅 Manicura & Pedicura</h4>
-      ${row('Tipo de unhas', c.tipoUnhas)} ${row('Pele das mãos/pés', c.peleMaos)}
-      ${row('Tipo de pé', c.tipoPe)} ${row('Fungo (histórico)', c.fungoUnhas)}
+      ${rowTags('Tipo de unhas', tipoUnhasTags, 'tag-beige')} ${row('Pele das mãos/pés', c.peleMaos)}
+      ${rowTags('Tipo de pé', tipoPeTags, 'tag-beige')} ${row('Fungo (histórico)', c.fungoUnhas)}
       ${row('Rói as unhas', yn(c.roerUnhas))} ${row('Alergia gel/acrílico', c.alergiaGel)}
       ${row('Maquilhagem habitual', c.maquilhagem)} ${row('Aconselhamentos', c.aconselhUnhas)}
       ${row('Cosméticos usados', c.cosmUnhas)} ${row('Observações', c.obsUnhas)}
     </div>
     <div class="info-block"><h4>🧴 Corporal & Massagem</h4>
-      ${row('Objetivo', c.objCorporal)} ${row('Marcapasso/Implante', yn(c.marcapasso))}
+      ${rowTags('Objetivo', objCorpTags, 'tag-beige')} ${row('Marcapasso/Implante', yn(c.marcapasso))}
       ${row('Hérnia de disco', yn(c.hernia))} ${row('Sensib. ao calor', yn(c.calorSens))}
-      ${row('Pressão preferida', c.pressaoMassagem)} ${row('Área de tensão', c.tensao)}
+      ${rowTags('Pressão preferida', pressaoTags, 'tag-beige')} ${row('Área de tensão', c.tensao)}
       ${row('Observações', c.obsCorporal)}
     </div>
     <div class="info-block"><h4>📝 Avaliação & Notas</h4>
@@ -269,15 +281,27 @@ function editarFicha() {
     'est-desidratada','est-sensivel','est-acneica','est-asfixiada','est-envelhecida',
     'est-desvitalizada','est-hiperpig','est-rosácea','est-flacidez','est-descam',
     'les-hipocromia','les-hipercromia','les-melasma','les-efélides','les-comedoes',
-    'les-papulas','les-pustulas','les-cicatriz','les-telangiect','les-verrugas','les-ceratose','les-milium'
+    'les-papulas','les-pustulas','les-cicatriz','les-telangiect','les-verrugas','les-ceratose','les-milium',
+    'espessura-espessa','espessura-media','espessura-fina',
+    'sensib-rosto','sensib-macas','sensib-outro','sensib-nao',
+    'tipo-unhas-normais','tipo-unhas-frageis','tipo-unhas-descamam','tipo-unhas-quebradicas',
+    'tipo-pe-normal','tipo-pe-plano','tipo-pe-cavo',
+    'obj-corp-relaxamento','obj-corp-emagrecimento','obj-corp-modelagem','obj-corp-drenagem','obj-corp-dor',
+    'pressao-leve','pressao-media','pressao-forte'
   ];
   allCb.forEach(id => {
     const el = document.getElementById(id); if (!el) return;
     const grp = id.startsWith('sv-') ? c.services
       : id.startsWith('pat-') ? c.patologias
-      : id.startsWith('tipo-') ? c.tipoPele
+      : id.startsWith('tipo-normal') || id.startsWith('tipo-seca') || id.startsWith('tipo-oleosa') || id.startsWith('tipo-mista') ? c.tipoPele
       : id.startsWith('est-') ? c.estadoPele
-      : id.startsWith('les-') ? c.lesoes : null;
+      : id.startsWith('les-') ? c.lesoes
+      : id.startsWith('espessura-') ? c.espessura
+      : id.startsWith('sensib-') ? c.sensib
+      : id.startsWith('tipo-unhas-') ? c.tipoUnhas
+      : id.startsWith('tipo-pe-') ? c.tipoPe
+      : id.startsWith('obj-corp-') ? c.objCorporal
+      : id.startsWith('pressao-') ? c.pressaoMassagem : null;
     if (grp) el.checked = !!grp[id];
   });
 
@@ -287,12 +311,9 @@ function editarFicha() {
   sr('cirurgia', c.cirurgia); sr('protese', c.protese); sr('oncologico', c.oncologico);
   sr('gestacao', c.gestacao); sr('lentes', c.lentes); sr('alimentacao', c.alimentacao);
   sr('fuma', c.fuma); sr('desporto', c.desporto); sr('aha', c.aha);
-  sr('hidrat', c.hidrat); sr('espessura', c.espessura); sr('sensib', c.sensib);
-  sr('filtro', c.filtro); sr('acidos', c.acidos);
-  sr('tipo-unhas', c.tipoUnhas); sr('tipo-pe', c.tipoPe); sr('fungo-unhas', c.fungoUnhas);
-  sr('roer', c.roerUnhas); sr('alergia-gel', c.alergiaGel);
-  sr('obj-corp', c.objCorporal); sr('marcapasso', c.marcapasso); sr('hernia', c.hernia);
-  sr('calor', c.calorSens); sr('pressao', c.pressaoMassagem);
+  sr('hidrat', c.hidrat); sr('filtro', c.filtro); sr('acidos', c.acidos);
+  sr('fungo-unhas', c.fungoUnhas); sr('roer', c.roerUnhas); sr('alergia-gel', c.alergiaGel);
+  sr('marcapasso', c.marcapasso); sr('hernia', c.hernia); sr('calor', c.calorSens);
 
   setStar(c.avaliacao || 0);
   const lgpd = document.getElementById('f-lgpd');
