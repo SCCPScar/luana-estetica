@@ -58,7 +58,7 @@
      HEADER
 ════════════════════════════════════ -->
 <header>
-  <div class="logo">
+  <div class="logo" onclick="showView('search')" style="cursor:pointer" title="Voltar à página inicial">
     <span class="logo-icon">🍒</span>
     Luana <span>Estética</span>
   </div>
@@ -107,6 +107,7 @@
 
   <div class="section-heading">
     <h2>📅 Próximas Sessões</h2>
+    <button class="btn btn-moss btn-sm" onclick="abrirModalAgendamento()">+ Agendar</button>
     <div class="section-line"></div>
   </div>
   <div class="agenda-list" id="agenda-list"></div>
@@ -842,6 +843,31 @@
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- ════════════════════════════════════
+     MODAL: NOVO AGENDAMENTO RÁPIDO
+════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-agendamento">
+  <div class="modal">
+    <h3>+ Agendar</h3>
+    <div class="field">
+      <label>Cliente</label>
+      <select id="ag-cliente"></select>
+    </div>
+    <div class="field">
+      <label>Data</label>
+      <input type="date" id="ag-data">
+    </div>
+    <div class="field">
+      <label>Nota (opcional)</label>
+      <input type="text" id="ag-nota" placeholder="Ex: Manicure + Pedicure">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="fecharModal('modal-agendamento')">Cancelar</button>
+      <button class="btn btn-moss" onclick="salvarAgendamento()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
 
 <!-- ════════════════════════════════════
      MODAL: CONFIRMAÇÃO GENÉRICA

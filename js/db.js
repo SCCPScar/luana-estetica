@@ -24,21 +24,37 @@ function saveDB(data) {
 
 // Push the whole array to Firestore (one document per ficha, keyed by id)
 let _syncTimer = null;
+let _pendingData = null;
 function _syncToFirestore(data) {
   if (!currentUser) return;
+  _pendingData = data;
   clearTimeout(_syncTimer);
-  _syncTimer = setTimeout(() => {
-    const batch = fsdb.batch();
-    const col = _fichasCollection();
-    data.forEach(ficha => {
-      batch.set(col.doc(ficha.id), ficha);
-    });
-    batch.commit().catch(err => {
-      console.error('Erro ao guardar na nuvem:', err);
-      toast('⚠️ Erro ao sincronizar. Verifica a tua ligação.', 'danger');
-    });
-  }, 250);
+  _syncTimer = setTimeout(_flushToFirestore, 250);
 }
+
+function _flushToFirestore() {
+  clearTimeout(_syncTimer);
+  if (!currentUser || !_pendingData) return;
+  const data = _pendingData;
+  _pendingData = null;
+  const batch = fsdb.batch();
+  const col = _fichasCollection();
+  data.forEach(ficha => {
+    batch.set(col.doc(ficha.id), ficha);
+  });
+  return batch.commit().catch(err => {
+    console.error('Erro ao guardar na nuvem:', err);
+    toast('⚠️ Erro ao sincronizar. Verifica a tua ligação.', 'danger');
+  });
+}
+
+// Safety net: if the person closes the tab/browser right after saving,
+// make sure any pending write still goes out instead of being lost.
+window.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') _flushToFirestore();
+});
+window.addEventListener('pagehide', () => _flushToFirestore());
+window.addEventListener('beforeunload', () => _flushToFirestore());
 
 function _deleteFromFirestore(id) {
   if (!currentUser) return;
