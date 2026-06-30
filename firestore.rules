@@ -1,17 +1,74 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userId}/fichas/{fichaId} {
-      // Só o próprio utilizador autenticado pode ler/escrever as suas fichas.
-      allow read: if request.auth != null && request.auth.uid == userId;
 
-      // Na escrita, exige-se ainda que o campo "nome" exista e não esteja vazio,
-      // e limita-se o tamanho do documento para evitar abuso.
-      allow write: if request.auth != null
-                   && request.auth.uid == userId
-                   && request.resource.data.nome is string
-                   && request.resource.data.nome.size() > 0
-                   && request.resource.data.nome.size() < 200;
+    // ──────────────────────────────────────────────
+    // IMPORTANTE: substitui o texto abaixo pelo UID
+    // real da conta da administradora (Luana).
+    // Tem de ser EXATAMENTE o mesmo valor que está em
+    // js/firebase-config.js na constante ADMIN_UID.
+    // ──────────────────────────────────────────────
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == "UbefpX4TALPJk3eXs3CKJMXiEaC2";
+    }
+
+    // Verifica se o utilizador autenticado é uma cliente com acesso
+    // concedido à ficha {fichaId} pertencente à administradora {adminId}.
+    function isLinkedClient(adminId, fichaId) {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/clientes/$(request.auth.uid))
+        && get(/databases/$(database)/documents/clientes/$(request.auth.uid)).data.adminUid == adminId
+        && get(/databases/$(database)/documents/clientes/$(request.auth.uid)).data.fichaId == fichaId;
+    }
+
+    // ── FICHAS DE CLIENTES ──
+    match /users/{adminId}/fichas/{fichaId} {
+      // A administradora tem acesso total às suas próprias fichas.
+      allow read, write: if isAdmin() && request.auth.uid == adminId;
+
+      // A cliente vinculada pode LER a própria ficha...
+      allow read: if isLinkedClient(adminId, fichaId);
+
+      // ...e só pode ATUALIZAR os campos de contacto (nunca histórico
+      // clínico, planos, sessões, fotos, avaliações, etc).
+      allow update: if isLinkedClient(adminId, fichaId)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['telefone', 'email', 'endereco', 'updatedAt']);
+    }
+
+    // ── CONVITES (gerados pela admin, resgatados pela cliente) ──
+    match /convites/{codigo} {
+      // Qualquer utilizador autenticado pode verificar se um código existe
+      // (necessário para validar o convite antes de o resgatar).
+      allow get: if request.auth != null;
+
+      // Só a administradora pode criar convites novos.
+      allow create: if isAdmin() && request.resource.data.adminUid == request.auth.uid;
+
+      // O resgate (marcar como usado) só é permitido se ainda não tiver
+      // sido usado e mantendo fichaId/adminUid inalterados.
+      allow update: if request.auth != null
+        && resource.data.used == false
+        && request.resource.data.used == true
+        && request.resource.data.adminUid == resource.data.adminUid
+        && request.resource.data.fichaId == resource.data.fichaId;
+
+      allow delete: if isAdmin();
+    }
+
+    // ── PERFIS DE CLIENTE (liga a conta de login à ficha) ──
+    match /clientes/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+
+      // A própria cliente só pode criar o seu perfil resgatando um
+      // convite válido e ainda não utilizado.
+      allow create: if request.auth != null && request.auth.uid == uid
+        && exists(/databases/$(database)/documents/convites/$(request.resource.data.codigoUsado))
+        && get(/databases/$(database)/documents/convites/$(request.resource.data.codigoUsado)).data.used == false
+        && get(/databases/$(database)/documents/convites/$(request.resource.data.codigoUsado)).data.fichaId == request.resource.data.fichaId
+        && get(/databases/$(database)/documents/convites/$(request.resource.data.codigoUsado)).data.adminUid == request.resource.data.adminUid;
+
+      allow delete: if isAdmin();
     }
   }
 }

@@ -78,6 +78,8 @@ function toggleAuthMode() {
 }
 
 // ── AUTH STATE LISTENER ──
+let userRole = null; // 'admin' | 'cliente' | null
+
 auth.onAuthStateChanged(user => {
   const loadingScreen = document.getElementById('loading-screen');
   const authScreen = document.getElementById('auth-screen');
@@ -89,14 +91,59 @@ auth.onAuthStateChanged(user => {
     authScreen.style.display = 'none';
     appScreen.style.display = 'block';
     document.getElementById('user-email-label').textContent = user.email;
-    initApp();
+    resolveUserRole(user);
   } else {
     currentUser = null;
+    userRole = null;
     loadingScreen.style.display = 'none';
     appScreen.style.display = 'none';
     authScreen.style.display = 'flex';
   }
 });
+
+function resolveUserRole(user) {
+  if (user.uid === ADMIN_UID) {
+    userRole = 'admin';
+    applyRoleUI('admin');
+    initApp();
+    return;
+  }
+  fsdb.collection('clientes').doc(user.uid).get().then(doc => {
+    if (doc.exists) {
+      userRole = 'cliente';
+      applyRoleUI('cliente');
+      initClientPortal(doc.data().adminUid, doc.data().fichaId);
+    } else {
+      userRole = 'pendente';
+      applyRoleUI('pendente');
+    }
+  }).catch(err => {
+    console.error('Erro ao verificar conta:', err);
+    toast('⚠️ Erro ao verificar a conta.', 'danger');
+  });
+}
+
+// Hides/shows nav buttons and switches between the admin app and the
+// simplified client-only screens, depending on who logged in.
+function applyRoleUI(role) {
+  const navClientes = document.getElementById('nav-clientes-btn');
+  const navNova = document.getElementById('nav-nova-btn');
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+
+  if (role === 'admin') {
+    navClientes.style.display = '';
+    navNova.style.display = '';
+    document.getElementById('view-search').classList.add('active');
+  } else if (role === 'cliente') {
+    navClientes.style.display = 'none';
+    navNova.style.display = 'none';
+    document.getElementById('view-client-portal').classList.add('active');
+  } else {
+    navClientes.style.display = 'none';
+    navNova.style.display = 'none';
+    document.getElementById('view-client-invite').classList.add('active');
+  }
+}
 
 // Enter key submits the form
 document.addEventListener('DOMContentLoaded', () => {

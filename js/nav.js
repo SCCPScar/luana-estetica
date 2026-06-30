@@ -12,6 +12,16 @@ function showView(v) {
   if (v === 'search') { renderCards(); renderAgenda(); }
 }
 
+// Used by the logo click — sends each role to its own "home" screen.
+function goHome() {
+  if (userRole === 'cliente') {
+    document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+    document.getElementById('view-client-portal').classList.add('active');
+  } else if (userRole === 'admin') {
+    showView('search');
+  }
+}
+
 // ════════════════════════════════════════
 //  HOME / SEARCH
 // ════════════════════════════════════════

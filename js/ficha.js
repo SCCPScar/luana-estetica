@@ -362,3 +362,44 @@ function excluirFicha() {
     setTimeout(() => showView('search'), 500);
   }, { title: 'Excluir ficha', yesLabel: 'Sim, excluir' });
 }
+
+// ════════════════════════════════════════
+//  PORTAL DA CLIENTE — gerar convite de acesso
+// ════════════════════════════════════════
+let _ultimoCodigoConvite = '';
+
+function _gerarCodigo() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sem 0/O/1/I para evitar confusão
+  let code = '';
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+function gerarConvite() {
+  if (!currentEditId) return;
+  const code = _gerarCodigo();
+
+  fsdb.collection('convites').doc(code).set({
+    codigo: code,
+    fichaId: currentEditId,
+    adminUid: currentUser.uid,
+    used: false,
+    criadoEm: new Date().toISOString()
+  }).then(() => {
+    _ultimoCodigoConvite = code;
+    document.getElementById('invite-code-display').textContent = code;
+    document.getElementById('modal-convite').classList.add('open');
+  }).catch(err => {
+    console.error('Erro ao gerar convite:', err);
+    toast('⚠️ Erro ao gerar o código de convite.', 'danger');
+  });
+}
+
+function copiarCodigoConvite() {
+  if (!_ultimoCodigoConvite) return;
+  navigator.clipboard.writeText(_ultimoCodigoConvite).then(() => {
+    toast('📋 Código copiado!');
+  }).catch(() => {
+    toast('⚠️ Não foi possível copiar. Copia manualmente.', 'danger');
+  });
+}

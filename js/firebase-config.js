@@ -14,3 +14,12 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const fsdb = firebase.firestore();
 const fstorage = firebase.storage();
+
+// ════════════════════════════════════════
+//  UID da administradora (Luana)
+//  IMPORTANTE: substitui o texto abaixo pelo UID real da conta da
+//  administradora. Para encontrar: Firebase Console → Authentication →
+//  lista de utilizadores → copia o "User UID" da conta da Luana.
+//  Tens de colocar o MESMO valor aqui e no ficheiro firestore.rules.
+// ════════════════════════════════════════
+const ADMIN_UID = "UbefpX4TALPJk3eXs3CKJMXiEaC2";

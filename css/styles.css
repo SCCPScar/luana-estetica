@@ -1078,3 +1078,52 @@ textarea { resize: vertical; min-height: 76px; line-height: 1.6; }
   .check-group, .radio-group { gap: 0.4rem; }
   .fotos-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
 }
+
+/* ════════════════════════════════════════
+   BTN CHERRY (cor principal de destaque)
+════════════════════════════════════════ */
+.btn-cherry    { background: var(--cherry); color: var(--white); }
+.btn-cherry:hover { background: #8c0d34; box-shadow: 0 6px 16px rgba(103,6,38,0.35); transform: translateY(-1px); }
+
+/* ════════════════════════════════════════
+   PORTAL DA CLIENTE — convite & ficha
+════════════════════════════════════════ */
+.invite-box {
+  max-width: 420px; margin: 4rem auto;
+  background: var(--white); border-radius: var(--radius-lg);
+  padding: 2.6rem 2.4rem; text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+.invite-icon { font-size: 2.4rem; margin-bottom: 0.6rem; }
+.invite-box h2 {
+  font-family: 'Cormorant Garamond', serif; font-size: 1.6rem;
+  color: var(--cherry); margin-bottom: 0.4rem;
+}
+.invite-box p { font-size: 0.86rem; color: var(--text-lt); margin-bottom: 1.4rem; line-height: 1.5; }
+.invite-box .field { text-align: left; margin-bottom: 1rem; }
+.invite-box .btn { width: 100%; margin-top: 0.4rem; }
+.invite-box input { text-align: center; letter-spacing: 0.12em; font-weight: 600; }
+
+.invite-code-display {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem; font-weight: 700; letter-spacing: 0.18em;
+  color: var(--cherry); background: var(--moss-xlt);
+  border-radius: var(--radius-md); padding: 1rem; text-align: center;
+  margin: 1rem 0;
+}
+
+.cp-readonly-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem; margin-bottom: 1rem;
+}
+.cp-readonly-grid label {
+  font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--text-lt); display: block; margin-bottom: 0.2rem;
+}
+.cp-value { font-size: 0.92rem; color: var(--text); font-weight: 500; }
+.cp-hint { font-size: 0.8rem; color: var(--text-lt); margin-bottom: 1rem; line-height: 1.5; }
+
+@media (max-width: 640px) {
+  .invite-box { margin: 2rem auto; padding: 2rem 1.5rem; }
+  .cp-readonly-grid { grid-template-columns: 1fr 1fr; }
+}

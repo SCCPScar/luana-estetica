@@ -58,13 +58,13 @@
      HEADER
 ════════════════════════════════════ -->
 <header>
-  <div class="logo" onclick="showView('search')" style="cursor:pointer" title="Voltar à página inicial">
+  <div class="logo" onclick="goHome()" style="cursor:pointer" title="Voltar à página inicial">
     <span class="logo-icon">🍒</span>
     Luana <span>Estética</span>
   </div>
   <nav>
-    <button class="nav-btn active" data-view="search" onclick="showView('search')">Clientes</button>
-    <button class="nav-btn accent" onclick="newFicha()">+ Nova Ficha</button>
+    <button class="nav-btn active" id="nav-clientes-btn" data-view="search" onclick="showView('search')">Clientes</button>
+    <button class="nav-btn accent" id="nav-nova-btn" onclick="newFicha()">+ Nova Ficha</button>
     <button class="nav-btn logout-btn" onclick="doLogout()" title="Terminar sessão">
       <span id="user-email-label"></span> · Sair
     </button>
@@ -124,6 +124,55 @@
     <span>Luana Estética · Cuidado, beleza e bem-estar</span>
     <span class="home-footer-line"></span>
   </div>
+</div>
+
+<!-- ════════════════════════════════════
+     VIEW: CLIENTE — RESGATAR CONVITE
+════════════════════════════════════ -->
+<div class="view" id="view-client-invite">
+  <div class="invite-box">
+    <div class="invite-icon">🍒</div>
+    <h2>Bem-vinda!</h2>
+    <p>Para aceder à tua ficha, introduz o código de convite que a Luana te enviou.</p>
+    <div class="field">
+      <label>Código de convite</label>
+      <input type="text" id="invite-code" placeholder="Ex: A1B2C3" style="text-transform:uppercase">
+    </div>
+    <div id="invite-error" class="auth-error" style="display:none"></div>
+    <button class="btn btn-cherry btn-lg" id="invite-submit-btn" onclick="resgatarConvite()">Validar código</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     VIEW: CLIENTE — PORTAL (ficha & agenda)
+════════════════════════════════════ -->
+<div class="view" id="view-client-portal">
+  <div class="section-heading"><h2 id="cp-saudacao">Olá!</h2><div class="section-line"></div></div>
+
+  <div class="form-card">
+    <div class="form-card-header"><div class="card-icon">📋</div><h3>A Minha Ficha</h3></div>
+    <div class="cp-readonly-grid">
+      <div><label>Nome</label><div class="cp-value" id="cp-nome"></div></div>
+      <div><label>Data de nascimento</label><div class="cp-value" id="cp-nascimento"></div></div>
+      <div><label>Profissão</label><div class="cp-value" id="cp-profissao"></div></div>
+      <div><label>Tipo de pele</label><div class="cp-value" id="cp-tipo-pele"></div></div>
+    </div>
+    <div class="tags-row" id="cp-services"></div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-card-header"><div class="card-icon">📞</div><h3>Os Meus Dados de Contacto</h3></div>
+    <p class="cp-hint">Estes são os únicos dados que podes atualizar diretamente. Para alterar outras informações, fala com a Luana.</p>
+    <div class="form-grid">
+      <div class="field"><label>Telefone</label><input type="text" id="cp-telefone"></div>
+      <div class="field"><label>E-mail</label><input type="email" id="cp-email"></div>
+      <div class="field span-2"><label>Morada</label><input type="text" id="cp-endereco"></div>
+    </div>
+    <button class="btn btn-moss" onclick="salvarContatoCliente()">💾 Guardar alterações</button>
+  </div>
+
+  <div class="section-heading"><h2>📅 As Minhas Sessões Agendadas</h2><div class="section-line"></div></div>
+  <div class="agenda-list" id="cp-agenda-list"></div>
 </div>
 
 <!-- ════════════════════════════════════
@@ -718,6 +767,7 @@
       <button class="btn btn-ghost btn-sm" onclick="showView('search')">← Voltar</button>
       <button class="btn btn-ghost btn-sm" onclick="editarFicha()">✏️ Editar Ficha</button>
       <button class="btn btn-ghost btn-sm no-print" onclick="imprimirFicha()">🖨️ Imprimir / PDF</button>
+      <button class="btn btn-moss btn-sm no-print" onclick="gerarConvite()">🔗 Convidar Cliente</button>
       <button class="btn btn-danger btn-sm" onclick="excluirFicha()">🗑️ Excluir</button>
     </div>
   </div>
@@ -845,6 +895,21 @@
 <div class="toast" id="toast"></div>
 
 <!-- ════════════════════════════════════
+     MODAL: CÓDIGO DE CONVITE GERADO
+════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-convite">
+  <div class="modal">
+    <h3>🔗 Convite para a Cliente</h3>
+    <p class="confirm-msg">Envia este código por WhatsApp ou SMS. A cliente cria uma conta no site e introduz este código para aceder à própria ficha.</p>
+    <div class="invite-code-display" id="invite-code-display"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="fecharModal('modal-convite')">Fechar</button>
+      <button class="btn btn-moss" onclick="copiarCodigoConvite()">📋 Copiar código</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
      MODAL: NOVO AGENDAMENTO RÁPIDO
 ════════════════════════════════════ -->
 <div class="modal-overlay" id="modal-agendamento">
@@ -901,6 +966,7 @@
 <script src="js/agenda.js"></script>
 <script src="js/exportar.js"></script>
 <script src="js/confirm-modal.js"></script>
+<script src="js/client-portal.js"></script>
 <script src="js/auth.js"></script>
 
 </body>
