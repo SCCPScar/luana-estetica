@@ -2,7 +2,7 @@
 //  FORM – NEW / RESET / SAVE
 // ════════════════════════════════════════
 function newFicha() {
-  currentEditId = null;
+  currentEditId = Date.now().toString();
   resetForm();
   document.getElementById('form-title').textContent = 'Nova Ficha de Cliente';
   document.getElementById('f-data-visita').value = new Date().toISOString().split('T')[0];
@@ -38,6 +38,8 @@ function resetForm() {
   setStar(0);
   const lgpd = document.getElementById('f-lgpd');
   if (lgpd) lgpd.checked = false;
+  _fotosAtual = [];
+  renderFotosGrid();
 }
 
 function setStar(v) {
@@ -52,6 +54,24 @@ function setStar(v) {
 function salvarFicha() {
   const nome = val('f-nome');
   if (!nome) { toast('⚠️ O nome da cliente é obrigatório!', 'danger'); return; }
+
+  const telefone = val('f-telefone');
+  if (telefone && !/^[0-9+()\s-]{7,20}$/.test(telefone)) {
+    toast('⚠️ Telefone inválido. Usa apenas números, espaços, + ou -.', 'danger');
+    return;
+  }
+
+  const email = val('f-email');
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    toast('⚠️ E-mail inválido. Verifica o formato (ex: nome@exemplo.com).', 'danger');
+    return;
+  }
+
+  const nascimento = val('f-nascimento');
+  if (nascimento && new Date(nascimento) > new Date()) {
+    toast('⚠️ A data de nascimento não pode estar no futuro.', 'danger');
+    return;
+  }
 
   const SVC  = Object.keys(getServiceMap());
   const PATS = ['pat-diabetes','pat-epilepsia','pat-tiroide','pat-hipertiroi','pat-hipotiroi',
@@ -111,10 +131,11 @@ function salvarFicha() {
     avaliacao: parseInt(val('f-avaliacao')) || 0,
     lgpd: document.getElementById('f-lgpd')?.checked || false,
     planos: existing?.planos || [],
+    fotos: _fotosAtual,
     updatedAt: new Date().toISOString()
   };
 
-  if (currentEditId) {
+  if (existing) {
     const idx = db.findIndex(x => x.id === currentEditId);
     if (idx > -1) db[idx] = ficha;
   } else {
@@ -145,6 +166,8 @@ function showDetail(id) {
   const svcs = getSelectedServices(c);
   document.getElementById('d-services').innerHTML =
     svcs.map(s => `<span class="tag">${s}</span>`).join('');
+
+  renderFotosDetail(c);
 
   // Maps
   const PAT_MAP = {
@@ -254,6 +277,9 @@ function editarFicha() {
 
   document.getElementById('form-title').textContent = 'Editar Ficha — ' + c.nome;
   resetForm();
+  currentEditId = c.id;
+  _fotosAtual = c.fotos ? [...c.fotos] : [];
+  renderFotosGrid();
 
   const sv = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
   sv('f-nome', c.nome); sv('f-nascimento', c.nascimento); sv('f-profissao', c.profissao);
@@ -329,9 +355,10 @@ function excluirFicha() {
   const db = loadDB();
   const c = db.find(x => x.id === currentEditId);
   if (!c) return;
-  if (!confirm(`Excluir a ficha de "${c.nome}"? Esta ação não pode ser desfeita.`)) return;
-  _deleteFromFirestore(currentEditId);
-  saveDB(db.filter(x => x.id !== currentEditId));
-  toast('🗑️ Ficha excluída.');
-  setTimeout(() => showView('search'), 500);
+  askConfirm(`Excluir a ficha de "${c.nome}"? Esta ação não pode ser desfeita.`, () => {
+    _deleteFromFirestore(currentEditId);
+    saveDB(db.filter(x => x.id !== currentEditId));
+    toast('🗑️ Ficha excluída.');
+    setTimeout(() => showView('search'), 500);
+  }, { title: 'Excluir ficha', yesLabel: 'Sim, excluir' });
 }

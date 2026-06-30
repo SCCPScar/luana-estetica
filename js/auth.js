@@ -56,8 +56,7 @@ function doRegister() {
 }
 
 function doLogout() {
-  if (!confirm('Terminar sessão?')) return;
-  auth.signOut();
+  askConfirm('Terminar sessão?', () => auth.signOut(), { title: 'Sair', yesLabel: 'Sim, sair' });
 }
 
 function toggleAuthMode() {

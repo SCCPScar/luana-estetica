@@ -102,7 +102,14 @@
       <span class="stat-num" id="stat-total">0</span>
       clientes cadastradas
     </div>
+    <button class="btn btn-outline btn-sm" onclick="exportarCSV()">⬇️ Exportar CSV</button>
   </div>
+
+  <div class="section-heading">
+    <h2>📅 Próximas Sessões</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="agenda-list" id="agenda-list"></div>
 
   <div class="section-heading">
     <h2>Clientes</h2>
@@ -180,6 +187,20 @@
         <input type="text" id="f-endereco" placeholder="Rua, número, cidade">
       </div>
     </div>
+  </div>
+
+  <!-- ── 1B · FOTOS ── -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="card-icon">📷</div>
+      <h3>Fotos (Antes / Depois)</h3>
+    </div>
+    <div class="field">
+      <label>Adicionar foto</label>
+      <input type="file" id="f-foto-input" accept="image/*" onchange="uploadFoto(this)">
+      <div id="foto-upload-status" class="foto-upload-status"></div>
+    </div>
+    <div class="fotos-grid" id="fotos-grid"></div>
   </div>
 
   <!-- ── 2 · SERVIÇOS ── -->
@@ -695,11 +716,14 @@
     <div class="detail-actions">
       <button class="btn btn-ghost btn-sm" onclick="showView('search')">← Voltar</button>
       <button class="btn btn-ghost btn-sm" onclick="editarFicha()">✏️ Editar Ficha</button>
+      <button class="btn btn-ghost btn-sm no-print" onclick="imprimirFicha()">🖨️ Imprimir / PDF</button>
       <button class="btn btn-danger btn-sm" onclick="excluirFicha()">🗑️ Excluir</button>
     </div>
   </div>
 
-  <div class="detail-tabs">
+  <div class="fotos-grid detail-fotos" id="d-fotos"></div>
+
+  <div class="detail-tabs no-print">
     <button class="detail-tab active" onclick="switchTab('ficha')">📋 Ficha & Anamnese</button>
     <button class="detail-tab" onclick="switchTab('tratamento')">🍒 Acompanhamento</button>
   </div>
@@ -819,12 +843,27 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<!-- ════════════════════════════════════
+     MODAL: CONFIRMAÇÃO GENÉRICA
+════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal modal-confirm">
+    <h3 id="confirm-title">Confirmar ação</h3>
+    <p id="confirm-msg" class="confirm-msg"></p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="_confirmNo()">Cancelar</button>
+      <button class="btn btn-danger" id="confirm-yes-btn" onclick="_confirmYes()">Sim, confirmar</button>
+    </div>
+  </div>
+</div>
+
 </div><!-- /app-screen -->
 
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
 <!-- Scripts — ordem importante! -->
 <script src="js/firebase-config.js"></script>
@@ -832,6 +871,10 @@
 <script src="js/nav.js"></script>
 <script src="js/ficha.js"></script>
 <script src="js/tratamento.js"></script>
+<script src="js/fotos.js"></script>
+<script src="js/agenda.js"></script>
+<script src="js/exportar.js"></script>
+<script src="js/confirm-modal.js"></script>
 <script src="js/auth.js"></script>
 
 </body>

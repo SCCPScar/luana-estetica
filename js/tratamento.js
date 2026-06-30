@@ -20,7 +20,7 @@ function renderPlanos() {
   const planos = getPlanos();
   const el = document.getElementById('planos-list');
   if (!planos.length) {
-    el.innerHTML = `<div class="empty-trat"><div class="icon">🌿</div><p>Nenhum plano de tratamento criado ainda.<br>Clique em <strong>+ Novo Plano</strong> para começar a acompanhar.</p></div>`;
+    el.innerHTML = `<div class="empty-trat"><div class="icon">🍒</div><p>Nenhum plano de tratamento criado ainda.<br>Clique em <strong>+ Novo Plano</strong> para começar a acompanhar.</p></div>`;
     return;
   }
 
@@ -156,10 +156,11 @@ function salvarPlano() {
 }
 
 function excluirPlano(pid) {
-  if (!confirm('Excluir este plano e todas as suas sessões?')) return;
-  savePlanos(getPlanos().filter(x => x.id !== pid));
-  renderPlanos();
-  toast('🗑️ Plano excluído.');
+  askConfirm('Excluir este plano e todas as suas sessões?', () => {
+    savePlanos(getPlanos().filter(x => x.id !== pid));
+    renderPlanos();
+    toast('🗑️ Plano excluído.');
+  }, { title: 'Excluir plano', yesLabel: 'Sim, excluir' });
 }
 
 // ─── MODAL SESSÃO ─────────────────────
@@ -238,14 +239,15 @@ function salvarSessao() {
 }
 
 function excluirSessao(pid, sid) {
-  if (!confirm('Excluir esta sessão?')) return;
-  const planos = getPlanos();
-  const pIdx = planos.findIndex(x => x.id === pid);
-  if (pIdx < 0) return;
-  planos[pIdx].sessoes = (planos[pIdx].sessoes || []).filter(x => x.id !== sid);
-  savePlanos(planos);
-  renderPlanos();
-  toast('🗑️ Sessão excluída.');
+  askConfirm('Excluir esta sessão?', () => {
+    const planos = getPlanos();
+    const pIdx = planos.findIndex(x => x.id === pid);
+    if (pIdx < 0) return;
+    planos[pIdx].sessoes = (planos[pIdx].sessoes || []).filter(x => x.id !== sid);
+    savePlanos(planos);
+    renderPlanos();
+    toast('🗑️ Sessão excluída.');
+  }, { title: 'Excluir sessão', yesLabel: 'Sim, excluir' });
 }
 
 // ─── MODAL HELPERS ────────────────────

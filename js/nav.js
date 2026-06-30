@@ -9,7 +9,7 @@ function showView(v) {
   document.querySelectorAll('.nav-btn[data-view]').forEach(b =>
     b.classList.toggle('active', b.dataset.view === v)
   );
-  if (v === 'search') renderCards();
+  if (v === 'search') { renderCards(); renderAgenda(); }
 }
 
 // ════════════════════════════════════════
@@ -29,7 +29,7 @@ function renderCards() {
   if (!filtered.length) {
     grid.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">🌿</div>
+        <div class="empty-icon">🍒</div>
         <h3>${q ? 'Nenhuma cliente encontrada' : 'Ainda sem clientes'}</h3>
         <p>${q
           ? `Não há resultados para "<strong>${q}</strong>". Tente outro nome.`
@@ -71,7 +71,7 @@ function renderCards() {
         </div>
         <div class="card-footer">
           <span>${stars || '—'}</span>
-          <span>${planoActivo ? '🌿 ' + planoActivo.nome : totalPlanos ? totalPlanos + ' plano(s)' : c.dataVisita ? formatDate(c.dataVisita) : ''}</span>
+          <span>${planoActivo ? '🍒 ' + planoActivo.nome : totalPlanos ? totalPlanos + ' plano(s)' : c.dataVisita ? formatDate(c.dataVisita) : ''}</span>
         </div>
       </div>`;
   }).join('');
