@@ -133,6 +133,8 @@ function applyRoleUI(role) {
   if (role === 'admin') {
     navClientes.style.display = '';
     navNova.style.display = '';
+    const notifBtn = document.getElementById('nav-notifications-btn');
+    if (notifBtn) { notifBtn.style.display = ''; renderNotifBadge(); }
     document.getElementById('view-search').classList.add('active');
   } else if (role === 'cliente') {
     navClientes.style.display = 'none';

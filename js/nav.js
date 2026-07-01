@@ -98,3 +98,44 @@ function switchTab(name) {
   document.getElementById('tab-tratamento').classList.toggle('active', name === 'tratamento');
   if (name === 'tratamento') renderPlanos();
 }
+
+// ─── SEARCH FILTERS ───
+let _activeFilter = 'all';
+const FILTER_MAP = {
+  facial:   ['sv-facial-classico','sv-facial-hidrat','sv-facial-anti-age','sv-facial-vit-c','sv-limpeza','sv-peeling','sv-micropigm-sobrancelhas'],
+  unhas:    ['sv-manicure','sv-pedicure','sv-gel','sv-acrilico','sv-nail-art','sv-semi-permanente'],
+  corporal: ['sv-corp-esfoliacao','sv-corp-envolvimento','sv-corp-reducao','sv-corp-drenagem'],
+  massagem: ['sv-massagem-relax','sv-massagem-modeladora','sv-massagem-pedras','sv-massagem-bambu']
+};
+
+function setFilter(filter, btn) {
+  _activeFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderCards();
+}
+
+// Override renderCards to support filter
+const _origRenderCards = window.renderCards;
+window.renderCards = function() {
+  const query = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+  const db = loadDB();
+  const total = db.length;
+  document.getElementById('stat-total').textContent = total;
+
+  const filtered = db.filter(c => {
+    const nameMatch = !query || c.nome?.toLowerCase().includes(query);
+    if (!nameMatch) return false;
+    if (_activeFilter === 'all') return true;
+    const keys = FILTER_MAP[_activeFilter] || [];
+    return keys.some(k => c.services && c.services[k]);
+  });
+
+  const grid = document.getElementById('clients-grid');
+  if (!grid) return;
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🍒</div><p>${query||_activeFilter!=='all'?'Nenhuma cliente encontrada.':'Ainda não há fichas criadas.'}</p></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(c => _makeCard(c)).join('');
+};
